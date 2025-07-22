@@ -1,3 +1,5 @@
+import HeaderScreen from '../../components/header/header-screen';
+
 export default function BookingScreen(): JSX.Element {
   return (
     <>
@@ -47,7 +49,7 @@ export default function BookingScreen(): JSX.Element {
         as="font"
         crossOrigin="anonymous"
       />
-      <link rel="stylesheet" href="css/style.min.css" />
+      <link rel="stylesheet" href="/markup/css/style.min.css" />
       <div className="visually-hidden">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -348,59 +350,17 @@ export default function BookingScreen(): JSX.Element {
         </svg>
       </div>
       <div className="wrapper">
-        <header className="header">
-          <div className="container container--size-l">
-            <a
-              className="logo header__logo"
-              href="index.html"
-              aria-label="Перейти на Главную"
-            >
-              <svg width={134} height={52} aria-hidden="true">
-                <use xlinkHref="#logo" />
-              </svg>
-            </a>
-            <nav className="main-nav header__main-nav">
-              <ul className="main-nav__list">
-                <li className="main-nav__item">
-                  <a className="link not-disabled active" href="index.html">
-                    Квесты
-                  </a>
-                </li>
-                <li className="main-nav__item">
-                  <a className="link" href="contacts.html">
-                    Контакты
-                  </a>
-                </li>
-                <li className="main-nav__item">
-                  <a className="link" href="my-quests.html">
-                    Мои бронирования
-                  </a>
-                </li>
-              </ul>
-            </nav>
-            <div className="header__side-nav">
-              <a className="btn btn--accent header__side-item" href="#">
-                Выйти
-              </a>
-              <a
-                className="link header__side-item header__phone-link"
-                href="tel:88003335599"
-              >
-                8 (000) 111-11-11
-              </a>
-            </div>
-          </div>
-        </header>
+        <HeaderScreen />
         <main className="page-content decorated-page">
           <div className="decorated-page__decor" aria-hidden="true">
             <picture>
               <source
                 type="image/webp"
-                srcSet="img/content/maniac/maniac-bg-size-m.webp, img/content/maniac/maniac-bg-size-m@2x.webp 2x"
+                srcSet="/img/content/maniac/maniac-bg-size-m.webp"
               />
               <img
-                src="img/content/maniac/maniac-bg-size-m.jpg"
-                srcSet="img/content/maniac/maniac-bg-size-m@2x.jpg 2x"
+                src="/img/content/maniac/maniac-bg-size-m.jpg"
+                srcSet="/img/content/maniac/maniac-bg-size-m@2x.jpg 2x"
                 width={1366}
                 height={1959}
                 alt=""

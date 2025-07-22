@@ -1,3 +1,5 @@
+import HeaderScreen from '../../components/header/header-screen';
+
 export default function DetailedQuestScreen(): JSX.Element {
   return (
     <>
@@ -47,7 +49,7 @@ export default function DetailedQuestScreen(): JSX.Element {
         as="font"
         crossOrigin="anonymous"
       />
-      <link rel="stylesheet" href="css/style.min.css" />
+      <link rel="stylesheet" href="/markup/css/style.min.css" />
       <div className="visually-hidden">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -348,60 +350,20 @@ export default function DetailedQuestScreen(): JSX.Element {
         </svg>
       </div>
       <div className="wrapper">
-        <header className="header">
-          <div className="container container--size-l">
-            <a
-              className="logo header__logo"
-              href="index.html"
-              aria-label="Перейти на Главную"
-            >
-              <svg width={134} height={52} aria-hidden="true">
-                <use xlinkHref="#logo" />
-              </svg>
-            </a>
-            <nav className="main-nav header__main-nav">
-              <ul className="main-nav__list">
-                <li className="main-nav__item">
-                  <a className="link not-disabled active" href="index.html">
-                    Квесты
-                  </a>
-                </li>
-                <li className="main-nav__item">
-                  <a className="link" href="contacts.html">
-                    Контакты
-                  </a>
-                </li>
-              </ul>
-            </nav>
-            <div className="header__side-nav">
-              <a
-                className="btn header__side-item header__login-btn"
-                href="login.html"
-              >
-                Вход
-              </a>
-              <a
-                className="link header__side-item header__phone-link"
-                href="tel:88003335599"
-              >
-                8 (000) 111-11-11
-              </a>
-            </div>
-          </div>
-        </header>
+        <HeaderScreen />
         <main className="decorated-page quest-page">
           <div className="decorated-page__decor" aria-hidden="true">
             <picture>
               <source
                 type="image/webp"
-                srcSet="img/content/maniac/maniac-size-m.webp, img/content/maniac/maniac-size-m@2x.webp 2x"
+                srcSet="/img/content/maniac/maniac-size-m.webp"
               />
               <img
-                src="img/content/maniac/maniac-size-m.jpg"
+                src="img/markup/img/content/maniac/maniac-bg@2x.webp"
                 srcSet="img/content/maniac/maniac-size-m@2x.jpg 2x"
                 width={1366}
                 height={768}
-                alt=""
+                alt="Квест Маньяк"
               />
             </picture>
           </div>
