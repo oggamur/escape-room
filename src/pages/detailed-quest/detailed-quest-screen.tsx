@@ -1,6 +1,11 @@
 import HeaderScreen from '../../components/header/header-screen';
+import { useAppDispatch } from '../../hooks';
+import { AppRoute } from '../../const';
+import { setActivePage } from '../../store/page-process/page-process';
 
 export default function DetailedQuestScreen(): JSX.Element {
+  const dispatch = useAppDispatch();
+  dispatch(setActivePage(AppRoute.QUEST));
   return (
     <>
       <title>Квест - Escape Room</title>

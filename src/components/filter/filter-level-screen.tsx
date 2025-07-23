@@ -1,7 +1,11 @@
 import { filterLevelButtonsData } from '../../const';
+import { getSortLevelType } from '../../store/sorting-process/selectors';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { setSortLevelType } from '../../store/sorting-process/sorting-process';
 
 export default function FilterLevelScreen(): JSX.Element {
-  const activeFilter = Object.keys(filterLevelButtonsData)[0];
+  const activeFilter = useAppSelector(getSortLevelType);
+  const dispatch = useAppDispatch();
 
   return (
     <ul className="filter__list">
@@ -12,6 +16,7 @@ export default function FilterLevelScreen(): JSX.Element {
             name="level"
             id={key}
             checked={key === activeFilter}
+            onChange={() => dispatch(setSortLevelType(key))}
           />
           <label className="filter__label" htmlFor={key}>
             <span className="filter__label-text">{label}</span>

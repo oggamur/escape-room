@@ -58,4 +58,6 @@ export const filterLevelButtonsData = {
 
 export enum NameSpace {
   QuestsData = 'QUESTS_DATA',
+  PageProcess = 'PAGE_PROCESS',
+  SortingProcess = 'SORTING_PROCESS',
 }

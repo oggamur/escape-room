@@ -1,5 +1,5 @@
 import MainScreen from '../../pages/main/main-screen';
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import LoginScreen from '../../pages/login/login-screen';
 import MyQuestsScreen from '../../pages/my-quests/my-quests-screen';

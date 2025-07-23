@@ -1,8 +1,11 @@
 import { filterGenreButtonsData } from '../../const';
+import { setSortGenreType } from '../../store/sorting-process/sorting-process';
+import { getSortGenreType } from '../../store/sorting-process/selectors';
+import { useAppSelector, useAppDispatch } from '../../hooks';
 
 export default function FilterGenreScreen(): JSX.Element {
-  const activeFilter = Object.keys(filterGenreButtonsData)[0];
-
+  const activeFilter = useAppSelector(getSortGenreType);
+  const dispatch = useAppDispatch();
   return (
     <ul className="filter__list">
       {Object.entries(filterGenreButtonsData).map(([key, label]) => (
@@ -12,6 +15,7 @@ export default function FilterGenreScreen(): JSX.Element {
             name="type"
             id={key}
             checked={key === activeFilter}
+            onChange={() => dispatch(setSortGenreType(key))}
           />
           <label className="filter__label" htmlFor={key}>
             <svg

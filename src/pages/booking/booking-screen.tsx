@@ -1,6 +1,11 @@
+import { AppRoute } from '../../const';
 import HeaderScreen from '../../components/header/header-screen';
+import { useAppDispatch } from '../../hooks';
+import { setActivePage } from '../../store/page-process/page-process';
 
 export default function BookingScreen(): JSX.Element {
+  const dispatch = useAppDispatch();
+  dispatch(setActivePage(AppRoute.BOOKING));
   return (
     <>
       <title>Бронирование квеста - Escape Room</title>
