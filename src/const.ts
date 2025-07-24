@@ -58,7 +58,12 @@ export const filterLevelButtonsData = {
 
 export enum NameSpace {
   QuestsData = 'QUESTS_DATA',
-  PageProcess = 'PAGE_PROCESS',
   SortingProcess = 'SORTING_PROCESS',
   DetailedProcess = 'DETAILED_PROCESS',
+  BookingProcess = 'BOOKING_PROCESS',
 }
+
+export const URL_MARKER_DEFAULT = '../markup/img/svg/pin-default.svg';
+export const URL_MARKER_CURRENT = '../markup/img/svg/pin-active.svg';
+
+export const SPB_COORDS = [59.938886, 30.713838];

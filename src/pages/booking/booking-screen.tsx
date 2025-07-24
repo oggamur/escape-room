@@ -1,11 +1,61 @@
-import { AppRoute } from '../../const';
 import HeaderScreen from '../../components/header/header-screen';
-import { useAppDispatch } from '../../hooks';
-import { setActivePage } from '../../store/page-process/page-process';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import {
+  fetchBookingDataAction,
+  fetchDetailedQuestDataAction,
+} from '../../store/api-actions';
+import {
+  getActiveBookingData,
+  getBookingQuestData,
+  getBookingQuestHasError,
+  getBookingQuestIsLoading,
+} from '../../store/booking-process/selectors';
+import WrongScreen from '../wrong/wrong-screen';
+import LoadingScreen from '../loading/loading-screen';
+import {
+  getDetailedQuestHasError,
+  getDetailedQuestIsLoading,
+  getDetailedQuestData,
+} from '../../store/detailed-process/selectors';
+import MapScreen from '../../components/map/map';
+import BookingFormDate from '../../components/booking-form-date/booking-form-date';
 
 export default function BookingScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  dispatch(setActivePage(AppRoute.BOOKING));
+  const { id } = useParams();
+
+  useEffect(() => {
+    dispatch(fetchBookingDataAction(id));
+    dispatch(fetchDetailedQuestDataAction(id));
+  }, [dispatch, id]);
+
+  const bookingQuestData = useAppSelector(getBookingQuestData);
+  const detailedQuestData = useAppSelector(getDetailedQuestData);
+  const bookingDataHasError = useAppSelector(getBookingQuestHasError);
+  const isBookingDataLoading = useAppSelector(getBookingQuestIsLoading);
+  const detailedQuestDataHasError = useAppSelector(getDetailedQuestHasError);
+  const isDetailedQuestLoading = useAppSelector(getDetailedQuestIsLoading);
+  const activeBookingData = useAppSelector(getActiveBookingData);
+  console.log(activeBookingData);
+  if (
+    isBookingDataLoading ||
+    isDetailedQuestLoading ||
+    activeBookingData === null
+  ) {
+    return <LoadingScreen size={60} color="#c75d29" />;
+  }
+
+  if (
+    !bookingQuestData ||
+    !detailedQuestData ||
+    bookingDataHasError ||
+    detailedQuestDataHasError
+  ) {
+    return <WrongScreen />;
+  }
+
   return (
     <>
       <title>Бронирование квеста - Escape Room</title>
@@ -19,23 +69,23 @@ export default function BookingScreen(): JSX.Element {
       <link
         rel="apple-touch-icon"
         sizes="180x180"
-        href="favicon/apple-touch-icon.png"
+        href="/favicon/apple-touch-icon.png"
       />
       <link
         rel="icon"
         type="image/png"
         sizes="32x32"
-        href="favicon/favicon-32x32.png"
+        href="/favicon/favicon-32x32.png"
       />
       <link
         rel="icon"
         type="image/png"
         sizes="16x16"
-        href="favicon/favicon-16x16.png"
+        href="/favicon/favicon-16x16.png"
       />
       <link
         rel="manifest"
-        href="favicon/site.webmanifest"
+        href="../markup/favicon/site.webmanifest"
         crossOrigin="use-credentials"
       />
       <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#141414" />
@@ -361,14 +411,14 @@ export default function BookingScreen(): JSX.Element {
             <picture>
               <source
                 type="image/webp"
-                srcSet="/img/content/maniac/maniac-bg-size-m.webp"
+                srcSet={`${detailedQuestData.previewImgWebp}, ${detailedQuestData.coverImgWebp} 2x`}
               />
               <img
-                src="/img/content/maniac/maniac-bg-size-m.jpg"
-                srcSet="/img/content/maniac/maniac-bg-size-m@2x.jpg 2x"
+                src={detailedQuestData.previewImg}
+                srcSet={`${detailedQuestData.coverImg} 2x`}
                 width={1366}
                 height={1959}
-                alt=""
+                alt={detailedQuestData.title}
               />
             </picture>
           </div>
@@ -378,17 +428,21 @@ export default function BookingScreen(): JSX.Element {
                 Бронирование квеста
               </h1>
               <p className="title title--size-m title--uppercase page-content__title">
-                Маньяк
+                {detailedQuestData.title}
               </p>
             </div>
             <div className="page-content__item">
               <div className="booking-map">
                 <div className="map">
-                  <div className="map__container" />
+                  <div className="map__container">
+                    <MapScreen
+                      quests={bookingQuestData}
+                      activeQuest={activeBookingData}
+                    />
+                  </div>
                 </div>
                 <p className="booking-map__address">
-                  Вы&nbsp;выбрали: наб. реки Карповки&nbsp;5, лит&nbsp;П, м.
-                  Петроградская
+                  {`Вы выбрали: ${activeBookingData.location.address}`}
                 </p>
               </div>
             </div>
@@ -404,110 +458,17 @@ export default function BookingScreen(): JSX.Element {
                 <fieldset className="booking-form__date-section">
                   <legend className="booking-form__date-title">Сегодня</legend>
                   <div className="booking-form__date-inner-wrapper">
-                    <label className="custom-radio booking-form__date">
-                      <input
-                        type="radio"
-                        id="today9h45m"
-                        name="date"
-                        defaultValue="today9h45m"
-                      />
-                      <span className="custom-radio__label">9:45</span>
-                    </label>
-                    <label className="custom-radio booking-form__date">
-                      <input
-                        type="radio"
-                        id="today15h00m"
-                        name="date"
-                        required
-                        defaultValue="today15h00m"
-                      />
-                      <span className="custom-radio__label">15:00</span>
-                    </label>
-                    <label className="custom-radio booking-form__date">
-                      <input
-                        type="radio"
-                        id="today17h30m"
-                        name="date"
-                        required
-                        defaultValue="today17h30m"
-                      />
-                      <span className="custom-radio__label">17:30</span>
-                    </label>
-                    <label className="custom-radio booking-form__date">
-                      <input
-                        type="radio"
-                        id="today19h30m"
-                        name="date"
-                        required
-                        defaultValue="today19h30m"
-                      />
-                      <span className="custom-radio__label">19:30</span>
-                    </label>
-                    <label className="custom-radio booking-form__date">
-                      <input
-                        type="radio"
-                        id="today21h30m"
-                        name="date"
-                        required
-                        defaultValue="today21h30m"
-                      />
-                      <span className="custom-radio__label">21:30</span>
-                    </label>
+                    {activeBookingData.slots.today.map((slot) => (
+                      <BookingFormDate key={slot.time} {...slot} />
+                    ))}
                   </div>
                 </fieldset>
                 <fieldset className="booking-form__date-section">
                   <legend className="booking-form__date-title">Завтра</legend>
                   <div className="booking-form__date-inner-wrapper">
-                    <label className="custom-radio booking-form__date">
-                      <input
-                        type="radio"
-                        id="tomorrow11h00m"
-                        name="date"
-                        required
-                        defaultValue="tomorrow11h00m"
-                      />
-                      <span className="custom-radio__label">11:00</span>
-                    </label>
-                    <label className="custom-radio booking-form__date">
-                      <input
-                        type="radio"
-                        id="tomorrow15h00m"
-                        name="date"
-                        required
-                        defaultValue="tomorrow15h00m"
-                      />
-                      <span className="custom-radio__label">15:00</span>
-                    </label>
-                    <label className="custom-radio booking-form__date">
-                      <input
-                        type="radio"
-                        id="tomorrow17h30m"
-                        name="date"
-                        required
-                        defaultValue="tomorrow17h30m"
-                      />
-                      <span className="custom-radio__label">17:30</span>
-                    </label>
-                    <label className="custom-radio booking-form__date">
-                      <input
-                        type="radio"
-                        id="tomorrow19h45m"
-                        name="date"
-                        required
-                        defaultValue="tomorrow19h45m"
-                      />
-                      <span className="custom-radio__label">19:45</span>
-                    </label>
-                    <label className="custom-radio booking-form__date">
-                      <input
-                        type="radio"
-                        id="tomorrow21h30m"
-                        name="date"
-                        required
-                        defaultValue="tomorrow21h30m"
-                      />
-                      <span className="custom-radio__label">21:30</span>
-                    </label>
+                    {activeBookingData.slots.tomorrow.map((slot) => (
+                      <BookingFormDate key={slot.time} {...slot} />
+                    ))}
                   </div>
                 </fieldset>
               </fieldset>

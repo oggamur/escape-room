@@ -1,33 +1,32 @@
 import HeaderScreen from '../../components/header/header-screen';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { AppRoute } from '../../const';
-import { setActivePage } from '../../store/page-process/page-process';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { fetchDetailedQuestDataAction } from '../../store/api-actions';
 import {
-  getDetailedOfferData,
-  getDetailedOfferHasError,
-  getDetailedOfferIsLoading,
+  getDetailedQuestData,
+  getDetailedQuestHasError,
+  getDetailedQuestIsLoading,
 } from '../../store/detailed-process/selectors';
 import WrongScreen from '../wrong/wrong-screen';
 import { filterGenreButtonsData, filterLevelButtonsData } from '../../const';
 import LoadingScreen from '../loading/loading-screen';
+
 export default function DetailedQuestScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  dispatch(setActivePage(AppRoute.QUEST));
+
   const { id } = useParams();
-  const hasError = useAppSelector(getDetailedOfferHasError);
-  const isLoading = useAppSelector(getDetailedOfferIsLoading);
+  const hasError = useAppSelector(getDetailedQuestHasError);
+  const isLoading = useAppSelector(getDetailedQuestIsLoading);
   useEffect(() => {
     dispatch(fetchDetailedQuestDataAction(id));
   }, [dispatch, id]);
-  const detailedOfferData = useAppSelector(getDetailedOfferData);
+  const detailedQuestData = useAppSelector(getDetailedQuestData);
 
   if (isLoading) {
     return <LoadingScreen />;
   }
-  if (!detailedOfferData || hasError) {
+  if (!detailedQuestData || hasError) {
     return <WrongScreen />;
   }
 
@@ -386,50 +385,50 @@ export default function DetailedQuestScreen(): JSX.Element {
             <picture>
               <source
                 type="image/webp"
-                srcSet={detailedOfferData.coverImgWebp}
+                srcSet={`${detailedQuestData.previewImgWebp}, ${detailedQuestData.coverImgWebp} 2x`}
               />
               <img
-                src={detailedOfferData.coverImgWebp}
-                srcSet={`${detailedOfferData.coverImg} 2x`}
+                src={detailedQuestData.previewImg}
+                srcSet={`${detailedQuestData.coverImg} 2x`}
                 width={1366}
                 height={768}
-                alt={detailedOfferData.title}
+                alt={detailedQuestData.title}
               />
             </picture>
           </div>
           <div className="container container--size-l">
             <div className="quest-page__content">
               <h1 className="title title--size-l title--uppercase quest-page__title">
-                {detailedOfferData.title}
+                {detailedQuestData.title}
               </h1>
               <p className="subtitle quest-page__subtitle">
                 <span className="visually-hidden">Жанр:</span>
-                {filterGenreButtonsData[detailedOfferData.type]}
+                {filterGenreButtonsData[detailedQuestData.type]}
               </p>
               <ul className="tags tags--size-l quest-page__tags">
                 <li className="tags__item">
                   <svg width={11} height={14} aria-hidden="true">
                     <use xlinkHref="#icon-person" />
                   </svg>
-                  {detailedOfferData.peopleMinMax[0]}–
-                  {detailedOfferData.peopleMinMax[1]}&nbsp;чел
+                  {detailedQuestData.peopleMinMax[0]}–
+                  {detailedQuestData.peopleMinMax[1]}&nbsp;чел
                 </li>
                 <li className="tags__item">
                   <svg width={14} height={14} aria-hidden="true">
                     <use xlinkHref="#icon-level" />
                   </svg>
-                  {filterLevelButtonsData[detailedOfferData.level]}
+                  {filterLevelButtonsData[detailedQuestData.level]}
                 </li>
               </ul>
               <p className="quest-page__description">
-                {detailedOfferData.description}
+                {detailedQuestData.description}
               </p>
-              <a
+              <Link
                 className="btn btn--accent btn--cta quest-page__btn"
-                href="booking.html"
+                to={`/booking/${detailedQuestData.id}`}
               >
                 Забронировать
-              </a>
+              </Link>
             </div>
           </div>
         </main>

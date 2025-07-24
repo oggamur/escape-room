@@ -1,11 +1,8 @@
 import HeaderScreen from '../../components/header/header-screen';
-import { useAppDispatch } from '../../hooks';
-import { setActivePage } from '../../store/page-process/page-process';
-import { AppRoute } from '../../const';
+
 
 export default function ContactsScreen(): JSX.Element {
-  const dispatch = useAppDispatch();
-  dispatch(setActivePage(AppRoute.CONTACTS));
+
   return (
     <>
       <title>Контакты - Escape Room</title>

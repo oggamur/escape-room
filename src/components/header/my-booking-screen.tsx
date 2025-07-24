@@ -1,8 +1,7 @@
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { Link } from 'react-router-dom';
 import cn from 'classnames';
-import { useAppSelector } from '../../hooks';
-import { getActivePage } from '../../store/page-process/selectors';
+import { useLocation } from 'react-router-dom';
 type MyBookingScreenType = {
   isAuthStatus: AuthorizationStatus;
 };
@@ -10,7 +9,10 @@ type MyBookingScreenType = {
 export default function MyBookingScreen({
   isAuthStatus,
 }: MyBookingScreenType): JSX.Element | null {
-  const activePage = useAppSelector(getActivePage);
+  const location = useLocation();
+
+  const pathSegments = location.pathname.split('/').filter(Boolean);
+  const pageRoute = `/${pathSegments[pathSegments.length - 1]}`;
 
   if (isAuthStatus !== AuthorizationStatus.AUTH) {
     return null;
@@ -20,7 +22,7 @@ export default function MyBookingScreen({
     <li className="main-nav__item">
       <Link
         className={cn('link', {
-          'link active': activePage === AppRoute.MY_QUESTS,
+          'link active': pageRoute === AppRoute.MY_QUESTS,
         })}
         to={AppRoute.MY_QUESTS}
       >

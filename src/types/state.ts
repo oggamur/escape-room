@@ -22,7 +22,31 @@ export type SortingProcessState = {
 };
 
 export type DetailedProcessState = {
-  detailedOffer: DetailedQuestCardType | null;
+  detailedQuest: DetailedQuestCardType | null;
+  isLoading: boolean;
+  hasError: boolean;
+};
+
+export type SlotsType = {
+  time: string;
+  isAvailable: boolean;
+};
+
+export type BookedQuest = {
+  id: string;
+  location: {
+    address: string;
+    coords: number[];
+  };
+  slots: {
+    today: SlotsType[];
+    tomorrow: SlotsType[];
+  };
+};
+
+export type BookingProcessState = {
+  bookedQuest: BookedQuest[] | null;
+  activeBookingData: BookedQuest | null;
   isLoading: boolean;
   hasError: boolean;
 };

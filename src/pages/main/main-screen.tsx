@@ -3,9 +3,8 @@ import FilterLevelScreen from '../../components/filter/filter-level-screen';
 import FilterGenreScreen from '../../components/filter/filter-genre-screen';
 import { getQuests } from '../../store/quests-data/selectors';
 import QuestCardScreen from '../../components/quest-card/quest-card-screen';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { setActivePage } from '../../store/page-process/page-process';
-import { AppRoute } from '../../const';
+import { useAppSelector } from '../../hooks';
+
 import {
   getSortLevelType,
   getSortGenreType,
@@ -17,8 +16,7 @@ export default function MainScreen(): JSX.Element {
   const activeLevelSort = useAppSelector(getSortLevelType);
   const activeGenreSort = useAppSelector(getSortGenreType);
   const quests = sortQuests(loadedQuests, activeLevelSort, activeGenreSort);
-  const dispatch = useAppDispatch();
-  dispatch(setActivePage(AppRoute.MAIN));
+
   return (
     <>
       <title>Escape Room</title>

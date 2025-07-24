@@ -3,7 +3,7 @@ import { NameSpace } from '../../const';
 import { DetailedProcessState } from '../../types/state';
 import { fetchDetailedQuestDataAction } from '../api-actions';
 const initialState: DetailedProcessState = {
-  detailedOffer: null,
+  detailedQuest: null,
   isLoading: false,
   hasError: false,
 };
@@ -18,7 +18,7 @@ export const detailedProcess = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchDetailedQuestDataAction.fulfilled, (state, action) => {
-        state.detailedOffer = action.payload.detailedOffer;
+        state.detailedQuest = action.payload.detailedOffer;
         state.isLoading = false;
       })
       .addCase(fetchDetailedQuestDataAction.rejected, (state) => {
