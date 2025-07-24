@@ -10,8 +10,8 @@ import {
   getSortLevelType,
   getSortGenreType,
 } from '../../store/sorting-process/selectors';
-
 import { sortQuests } from '../../logic/sort-quests';
+
 export default function MainScreen(): JSX.Element {
   const loadedQuests = useAppSelector(getQuests);
   const activeLevelSort = useAppSelector(getSortLevelType);

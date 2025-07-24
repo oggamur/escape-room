@@ -13,3 +13,16 @@ export type QuestCardType = {
 export type QuestCardScreenType = {
   cardProps: QuestCardType;
 };
+
+export type DetailedQuestCardType = {
+  id: string;
+  title: string;
+  previewImg: string;
+  previewImgWebp: string;
+  level: SortLevelType;
+  type: SortGenreType;
+  peopleMinMax: number[];
+  description: string;
+  coverImg: string;
+  coverImgWebp: string;
+};

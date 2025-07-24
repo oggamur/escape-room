@@ -1,11 +1,36 @@
 import HeaderScreen from '../../components/header/header-screen';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { AppRoute } from '../../const';
 import { setActivePage } from '../../store/page-process/page-process';
-
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { fetchDetailedQuestDataAction } from '../../store/api-actions';
+import {
+  getDetailedOfferData,
+  getDetailedOfferHasError,
+  getDetailedOfferIsLoading,
+} from '../../store/detailed-process/selectors';
+import WrongScreen from '../wrong/wrong-screen';
+import { filterGenreButtonsData, filterLevelButtonsData } from '../../const';
+import LoadingScreen from '../loading/loading-screen';
 export default function DetailedQuestScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   dispatch(setActivePage(AppRoute.QUEST));
+  const { id } = useParams();
+  const hasError = useAppSelector(getDetailedOfferHasError);
+  const isLoading = useAppSelector(getDetailedOfferIsLoading);
+  useEffect(() => {
+    dispatch(fetchDetailedQuestDataAction(id));
+  }, [dispatch, id]);
+  const detailedOfferData = useAppSelector(getDetailedOfferData);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+  if (!detailedOfferData || hasError) {
+    return <WrongScreen />;
+  }
+
   return (
     <>
       <title>Квест - Escape Room</title>
@@ -361,48 +386,43 @@ export default function DetailedQuestScreen(): JSX.Element {
             <picture>
               <source
                 type="image/webp"
-                srcSet="/img/content/maniac/maniac-size-m.webp"
+                srcSet={detailedOfferData.coverImgWebp}
               />
               <img
-                src="img/markup/img/content/maniac/maniac-bg@2x.webp"
-                srcSet="img/content/maniac/maniac-size-m@2x.jpg 2x"
+                src={detailedOfferData.coverImgWebp}
+                srcSet={`${detailedOfferData.coverImg} 2x`}
                 width={1366}
                 height={768}
-                alt="Квест Маньяк"
+                alt={detailedOfferData.title}
               />
             </picture>
           </div>
           <div className="container container--size-l">
             <div className="quest-page__content">
               <h1 className="title title--size-l title--uppercase quest-page__title">
-                Маньяк
+                {detailedOfferData.title}
               </h1>
               <p className="subtitle quest-page__subtitle">
-                <span className="visually-hidden">Жанр:</span>Ужасы
+                <span className="visually-hidden">Жанр:</span>
+                {filterGenreButtonsData[detailedOfferData.type]}
               </p>
               <ul className="tags tags--size-l quest-page__tags">
                 <li className="tags__item">
                   <svg width={11} height={14} aria-hidden="true">
                     <use xlinkHref="#icon-person" />
                   </svg>
-                  3–6&nbsp;чел
+                  {detailedOfferData.peopleMinMax[0]}–
+                  {detailedOfferData.peopleMinMax[1]}&nbsp;чел
                 </li>
                 <li className="tags__item">
                   <svg width={14} height={14} aria-hidden="true">
                     <use xlinkHref="#icon-level" />
                   </svg>
-                  Средний
+                  {filterLevelButtonsData[detailedOfferData.level]}
                 </li>
               </ul>
               <p className="quest-page__description">
-                В&nbsp;комнате с&nbsp;приглушённым светом несколько человек,
-                незнакомых друг с&nbsp;другом, приходят в&nbsp;себя. Никто
-                не&nbsp;помнит, что произошло прошлым вечером. Руки и&nbsp;ноги
-                связаны, но&nbsp;одному из&nbsp;вас получилось освободиться.
-                На&nbsp;стене висит пугающий таймер и&nbsp;запущен отсчёт
-                60&nbsp;минут. Сможете&nbsp;ли вы&nbsp;разобраться
-                в&nbsp;стрессовой ситуации, помочь другим, разобраться что
-                произошло и&nbsp;выбраться из&nbsp;комнаты?
+                {detailedOfferData.description}
               </p>
               <a
                 className="btn btn--accent btn--cta quest-page__btn"

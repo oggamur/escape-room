@@ -11,8 +11,8 @@ export enum AppRoute {
 
 export enum APIRoute {
   QuestsList = '/quest',
-  Quest = '/quest/:id',
-  Booking = '/quest/:id/booking',
+  Quest = '/quest',
+  Booking = '/booking',
   Reservations = '/reservation',
   Login = '/login',
   Logout = '/logout',
@@ -60,4 +60,5 @@ export enum NameSpace {
   QuestsData = 'QUESTS_DATA',
   PageProcess = 'PAGE_PROCESS',
   SortingProcess = 'SORTING_PROCESS',
+  DetailedProcess = 'DETAILED_PROCESS',
 }

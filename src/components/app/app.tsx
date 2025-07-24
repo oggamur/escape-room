@@ -9,6 +9,8 @@ import ContactsScreen from '../../pages/contacts/contacts-screen';
 import { HelmetProvider } from 'react-helmet-async';
 import browserHistory from '../../browser-history';
 import HistoryRouter from '../../history-router';
+import WrongScreen from '../../pages/wrong/wrong-screen';
+import NotFoundScreen from '../../pages/not-found/not-found-screen';
 
 function App(): JSX.Element {
   return (
@@ -16,8 +18,8 @@ function App(): JSX.Element {
       <HistoryRouter history={browserHistory}>
         <Routes>
           <Route path={AppRoute.MAIN} element={<MainScreen />} />
-          <Route path={AppRoute.ERROR} element={<h1>404</h1>} />
-          <Route path="*" element={<h1>404</h1>} />
+          <Route path={AppRoute.ERROR} element={<WrongScreen />} />
+          <Route path="*" element={<NotFoundScreen />} />
           <Route path={AppRoute.LOGIN} element={<LoginScreen />} />
           <Route path={AppRoute.MY_QUESTS} element={<MyQuestsScreen />} />
           <Route path={AppRoute.BOOKING} element={<BookingScreen />} />
