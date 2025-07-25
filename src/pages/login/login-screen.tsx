@@ -1,33 +1,44 @@
 import HeaderScreen from '../../components/header/header-screen';
-import { useRef } from 'react';
+
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { loginAction } from '../../store/api-actions';
-import { FormEvent } from 'react';
+
 import { Helmet } from 'react-helmet-async';
 import {
   getUserHasError,
   getUserIsLoading,
 } from '../../store/user-process/selectors';
 import WrongScreen from '../wrong/wrong-screen';
+import { useForm } from 'react-hook-form'; // Импортируем useForm
+
+// Тип для данных формы
+type FormData = {
+  email: string;
+  password: string;
+  userAgreement: boolean;
+};
 
 export default function LoginScreen(): JSX.Element {
-  const loginRef = useRef<HTMLInputElement | null>(null);
-  const passwordRef = useRef<HTMLInputElement | null>(null);
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector(getUserIsLoading);
   const hasError = useAppSelector(getUserHasError);
 
-  const handleLogin = (evt: FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
+  // Инициализируем React Hook Form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<FormData>({
+    mode: 'onChange', // Валидация при изменении полей
+  });
 
-    if (loginRef.current !== null && passwordRef.current !== null) {
-      dispatch(
-        loginAction({
-          login: loginRef.current.value,
-          password: passwordRef.current.value,
-        })
-      );
-    }
+  const onSubmit = (data: FormData) => {
+    dispatch(
+      loginAction({
+        login: data.email,
+        password: data.password,
+      })
+    );
   };
 
   if (hasError) {
@@ -406,57 +417,101 @@ export default function LoginScreen(): JSX.Element {
             <div className="login__form">
               <form
                 className="login-form"
-                action="https://echo.htmlacademy.ru/"
-                method="post"
-                onSubmit={handleLogin}
+                onSubmit={(e) => void handleSubmit(onSubmit)(e)}
               >
                 <div className="login-form__inner-wrapper">
                   <h1 className="title title--size-s login-form__title">
                     Вход
                   </h1>
                   <div className="login-form__inputs">
-                    <div className="custom-input login-form__input">
+                    {/* Поле Email */}
+                    <div
+                      className={`custom-input login-form__input ${
+                        errors.email ? 'is-invalid' : ''
+                      }`}
+                    >
                       <label className="custom-input__label" htmlFor="email">
                         E&nbsp;–&nbsp;mail
                       </label>
                       <input
                         type="email"
                         id="email"
-                        name="email"
                         placeholder="Адрес электронной почты"
-                        ref={loginRef}
-                        required
+                        {...register('email', {
+                          required: 'Обязательное поле',
+                          pattern: {
+                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                            message: 'Некорректный email',
+                          },
+                        })}
                       />
+                      {errors.email && (
+                        <p
+                          className="error-message"
+                          style={{
+                            color: 'red',
+                            fontSize: '12px',
+                            marginTop: '5px',
+                          }}
+                        >
+                          {errors.email.message}
+                        </p>
+                      )}
                     </div>
-                    <div className="custom-input login-form__input">
+
+                    {/* Поле Пароль */}
+                    <div
+                      className={`custom-input login-form__input ${
+                        errors.password ? 'is-invalid' : ''
+                      }`}
+                    >
                       <label className="custom-input__label" htmlFor="password">
                         Пароль
                       </label>
                       <input
                         type="password"
                         id="password"
-                        name="password"
                         placeholder="Пароль"
-                        pattern="^(?=.*[a-zA-Z])(?=.*\d).{2,}$"
-                        ref={passwordRef}
-                        required
+                        {...register('password', {
+                          required: 'Обязательное поле',
+                          pattern: {
+                            value: /^(?=.*[a-zA-Z])(?=.*\d).{2,}$/,
+                            message:
+                              'Минимум 1 буква, 1 цифра и более 2 символов',
+                          },
+                        })}
                       />
+                      {errors.password && (
+                        <p
+                          className="error-message"
+                          style={{
+                            color: 'red',
+                            fontSize: '12px',
+                            marginTop: '5px',
+                          }}
+                        >
+                          {errors.password.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <button
                     className="btn btn--accent btn--general login-form__submit"
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isLoading || !isValid} // Блокировка при загрузке или невалидной форме
                   >
                     Войти
                   </button>
                 </div>
+
+                {/* Чекбокс соглашения */}
                 <label className="custom-checkbox login-form__checkbox">
                   <input
                     type="checkbox"
                     id="id-order-agreement"
-                    name="user-agreement"
-                    required
+                    {...register('userAgreement', {
+                      required: 'Необходимо ваше согласие',
+                    })}
                   />
                   <span className="custom-checkbox__icon">
                     <svg width={20} height={17} aria-hidden="true">
@@ -473,6 +528,18 @@ export default function LoginScreen(): JSX.Element {
                     </a>
                     &nbsp;и пользовательским соглашением
                   </span>
+                  {errors.userAgreement && (
+                    <p
+                      className="error-message"
+                      style={{
+                        color: 'red',
+                        fontSize: '12px',
+                        marginTop: '5px',
+                      }}
+                    >
+                      {errors.userAgreement.message}
+                    </p>
+                  )}
                 </label>
               </form>
             </div>
