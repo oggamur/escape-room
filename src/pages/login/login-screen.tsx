@@ -1,9 +1,33 @@
 import HeaderScreen from '../../components/header/header-screen';
+import { useRef } from 'react';
+import { useAppDispatch } from '../../hooks';
+import { loginAction } from '../../store/api-actions';
+import { FormEvent } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 export default function LoginScreen(): JSX.Element {
+  const loginRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const dispatch = useAppDispatch();
+
+  const handleLogin = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    if (loginRef.current !== null && passwordRef.current !== null) {
+      dispatch(
+        loginAction({
+          login: loginRef.current.value,
+          password: passwordRef.current.value,
+        })
+      );
+    }
+  };
+
   return (
     <>
-      <title>Авторизация - Escape Room</title>
+      <Helmet>
+        <title>Авторизация - Escape Room</title>
+      </Helmet>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
@@ -373,6 +397,7 @@ export default function LoginScreen(): JSX.Element {
                 className="login-form"
                 action="https://echo.htmlacademy.ru/"
                 method="post"
+                onSubmit={handleLogin}
               >
                 <div className="login-form__inner-wrapper">
                   <h1 className="title title--size-s login-form__title">
@@ -388,6 +413,7 @@ export default function LoginScreen(): JSX.Element {
                         id="email"
                         name="email"
                         placeholder="Адрес электронной почты"
+                        ref={loginRef}
                         required
                       />
                     </div>
@@ -400,6 +426,8 @@ export default function LoginScreen(): JSX.Element {
                         id="password"
                         name="password"
                         placeholder="Пароль"
+                        pattern="^(?=.*[a-zA-Z])(?=.*\d).{2,}$"
+                        ref={passwordRef}
                         required
                       />
                     </div>
@@ -416,6 +444,7 @@ export default function LoginScreen(): JSX.Element {
                     type="checkbox"
                     id="id-order-agreement"
                     name="user-agreement"
+                    required
                   />
                   <span className="custom-checkbox__icon">
                     <svg width={20} height={17} aria-hidden="true">

@@ -26,3 +26,16 @@ export type DetailedQuestCardType = {
   coverImg: string;
   coverImgWebp: string;
 };
+
+export type UserData = {
+  email: null | string;
+  avatarUrl: string;
+  isPro: boolean;
+  name: string;
+  token: string;
+};
+
+export type AuthData = {
+  login: string;
+  password: string;
+};

@@ -8,8 +8,42 @@ import {
   SPB_COORDS,
 } from '../../const';
 import 'leaflet/dist/leaflet.css';
-import { setActiveBookingData } from '../../store/booking-process/booking-process';
+import {
+  clearDataToSend,
+  setActiveBookingData,
+  setPlaceId,
+} from '../../store/booking-process/booking-process';
 import { useAppDispatch } from '../../hooks';
+
+const resetCheckedStatus = () => {
+  const inputs = document.querySelectorAll('.custom-radio__input');
+  inputs.forEach((input) => {
+    const element = input as HTMLInputElement;
+    element.checked = false;
+  });
+  const inputName = document.getElementById('name') as HTMLInputElement;
+  if (inputName) {
+    inputName.value = '';
+  }
+  const inputPhone = document.getElementById('tel') as HTMLInputElement;
+  if (inputPhone) {
+    inputPhone.value = '';
+  }
+  const inputPeople = document.getElementById('person') as HTMLInputElement;
+  if (inputPeople) {
+    inputPeople.value = '';
+  }
+  const inputChildren = document.getElementById('children') as HTMLInputElement;
+  if (inputChildren) {
+    inputChildren.checked = false;
+  }
+  const inputPolitics = document.getElementById(
+    'id-order-agreement'
+  ) as HTMLInputElement;
+  if (inputPolitics) {
+    inputPolitics.checked = false;
+  }
+};
 
 type MapProps = {
   quests: BookedQuest[];
@@ -44,6 +78,9 @@ function MapScreen(props: MapProps): JSX.Element {
         });
         marker.addEventListener('click', () => {
           dispatch(setActiveBookingData(quest));
+          dispatch(clearDataToSend());
+          dispatch(setPlaceId(quest.id));
+          resetCheckedStatus();
         });
         marker
           .setIcon(

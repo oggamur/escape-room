@@ -1,13 +1,14 @@
 import AuthButtonScreen from './auth-button-screen';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute } from '../../const';
 import MyBookingScreen from './my-booking-screen';
 import { Link, useLocation } from 'react-router-dom';
-
+import { useAppSelector } from '../../hooks';
 import cn from 'classnames';
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
 
 export default function HeaderScreen(): JSX.Element {
   const location = useLocation();
-
+  const authStatus = useAppSelector(getAuthorizationStatus);
   const pathSegments = location.pathname.split('/').filter(Boolean);
   const lastSegment = (): string => {
     if (pathSegments.length === 0) {
@@ -50,11 +51,11 @@ export default function HeaderScreen(): JSX.Element {
                 Контакты
               </Link>
             </li>
-            <MyBookingScreen isAuthStatus={AuthorizationStatus.AUTH} />
+            <MyBookingScreen isAuthStatus={authStatus} />
           </ul>
         </nav>
         <div className="header__side-nav">
-          <AuthButtonScreen isAuthStatus={AuthorizationStatus.AUTH} />
+          <AuthButtonScreen isAuthStatus={authStatus} />
           <a
             className="link header__side-item header__phone-link"
             href="tel:88003335599"

@@ -1,25 +1,43 @@
 import HeaderScreen from '../../components/header/header-screen';
 import FilterLevelScreen from '../../components/filter/filter-level-screen';
 import FilterGenreScreen from '../../components/filter/filter-genre-screen';
-import { getQuests } from '../../store/quests-data/selectors';
+import {
+  getQuests,
+  getQuestsHasError,
+  getQuestsIsLoading,
+} from '../../store/quests-data/selectors';
 import QuestCardScreen from '../../components/quest-card/quest-card-screen';
 import { useAppSelector } from '../../hooks';
+import WrongScreen from '../wrong/wrong-screen';
+import LoadingScreen from '../loading/loading-screen';
 
 import {
   getSortLevelType,
   getSortGenreType,
 } from '../../store/sorting-process/selectors';
 import { sortQuests } from '../../logic/sort-quests';
+import { Helmet } from 'react-helmet-async';
 
 export default function MainScreen(): JSX.Element {
   const loadedQuests = useAppSelector(getQuests);
   const activeLevelSort = useAppSelector(getSortLevelType);
   const activeGenreSort = useAppSelector(getSortGenreType);
+  const isQuestsLoading = useAppSelector(getQuestsIsLoading);
+  const isQuestsHasError = useAppSelector(getQuestsHasError);
   const quests = sortQuests(loadedQuests, activeLevelSort, activeGenreSort);
 
+  if (isQuestsLoading) {
+    return <LoadingScreen size={60} color="#c75d29" />;
+  }
+
+  if (isQuestsHasError) {
+    return <WrongScreen />;
+  }
   return (
     <>
-      <title>Escape Room</title>
+      <Helmet>
+        <title>Escape Room</title>
+      </Helmet>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="X-UA-Compatible" content="ie=edge" />

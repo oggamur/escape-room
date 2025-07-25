@@ -1,7 +1,8 @@
 import { store } from '../store/store.js';
 import { AppRoute } from '../const';
 import { QuestCardType } from '../types/types';
-import { DetailedQuestCardType } from '../types/types';
+import { DetailedQuestCardType, UserData } from '../types/types';
+import { AuthorizationStatus } from '../const';
 
 export type State = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -44,9 +45,25 @@ export type BookedQuest = {
   };
 };
 
+export type DataToSendType = {
+  date: string | null;
+  time: string | null;
+  contactPerson: string | null;
+  phone: string | null;
+  withChildren: boolean;
+  peopleCount: number | null;
+  placeId: string | null | undefined;
+};
+
 export type BookingProcessState = {
   bookedQuest: BookedQuest[] | null;
   activeBookingData: BookedQuest | null;
   isLoading: boolean;
   hasError: boolean;
+  dataToSend: DataToSendType;
+};
+
+export type UserProcess = {
+  authorizationStatus: AuthorizationStatus;
+  userData: UserData;
 };

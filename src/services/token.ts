@@ -1,4 +1,4 @@
-const AUTH_TOKEN_KEY_NAME = 'excape-room-token';
+const AUTH_TOKEN_KEY_NAME = 'escape-room-token';
 
 export type Token = string;
 

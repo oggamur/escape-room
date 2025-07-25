@@ -1,11 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { State } from '../types/state.ts';
+import { DataToSendType, State } from '../types/state.ts';
 import { AxiosInstance } from 'axios';
 import { APIRoute } from '../const';
-import { QuestCardType } from '../types/types.ts';
+import { QuestCardType, UserData, AuthData } from '../types/types.ts';
 import { DetailedQuestCardType } from '../types/types.ts';
 import { BookedQuest } from '../types/state.ts';
-
+import { getToken, saveToken, dropToken } from '../services/token.ts';
+import { AppDispatch } from '../types/state.ts';
+import { redirectToRoute } from './action.ts';
+import { AppRoute } from '../const';
 export const fetchQuestsAction = createAsyncThunk<
   QuestCardType[],
   undefined,
@@ -59,5 +62,90 @@ export const fetchBookingDataAction = createAsyncThunk<
   if (bookedQuestData) {
     activeBookingData = bookedQuestData[0];
   }
-  return { bookedQuestData, activeBookingData };
+  return { bookedQuestData, activeBookingData, id };
 });
+
+export const checkAuthAction = createAsyncThunk<
+  { token: string; data: UserData },
+  undefined,
+  {
+    state: State;
+    extra: AxiosInstance;
+  }
+>('user/checkAuth', async (_arg, { extra: api }) => {
+  const token = getToken();
+  const { data } = await api.get<UserData>(APIRoute.Login);
+
+  return { token, data };
+});
+
+export const loginAction = createAsyncThunk<
+  UserData,
+  AuthData,
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }
+>(
+  'user/login',
+  async ({ login: email, password }, { dispatch, extra: api }) => {
+    const { data } = await api.post<UserData>(APIRoute.Login, {
+      email,
+      password,
+    });
+    saveToken(data.token);
+    dispatch(redirectToRoute(AppRoute.MAIN));
+    return data;
+  }
+);
+
+export const logoutAction = createAsyncThunk<
+  void,
+  undefined,
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }
+>('user/logout', async (_arg, { dispatch, extra: api }) => {
+  await api.delete(APIRoute.Logout);
+  dropToken();
+  dispatch(redirectToRoute(AppRoute.MAIN));
+});
+
+export const postBookingAction = createAsyncThunk<
+  void,
+  { data: DataToSendType; id: string },
+  {
+    state: State;
+    extra: AxiosInstance;
+  }
+>(
+  'comments/post',
+  async (
+    {
+      data: {
+        date,
+        time,
+        contactPerson,
+        phone,
+        withChildren,
+        peopleCount,
+        placeId,
+      },
+      id,
+    },
+    { extra: api }
+  ) => {
+    await api.post(`${APIRoute.Quest}/${id}${APIRoute.Booking}`, {
+      date,
+      time,
+      contactPerson,
+      phone,
+      withChildren,
+      peopleCount,
+      placeId,
+    });
+  }
+);

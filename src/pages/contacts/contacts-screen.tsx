@@ -1,11 +1,14 @@
+import { Helmet } from 'react-helmet-async';
 import HeaderScreen from '../../components/header/header-screen';
-
+import MapContactsScreen from '../../components/map/map-contacts';
+import { CONTACTS_COORDS } from '../../const';
 
 export default function ContactsScreen(): JSX.Element {
-
   return (
     <>
-      <title>Контакты - Escape Room</title>
+      <Helmet>
+        <title>Контакты - Escape Room</title>
+      </Helmet>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
@@ -414,7 +417,9 @@ export default function ContactsScreen(): JSX.Element {
               </dl>
               <div className="contacts__map">
                 <div className="map">
-                  <div className="map__container" />
+                  <div className="map__container">
+                    <MapContactsScreen location={CONTACTS_COORDS} />
+                  </div>
                 </div>
               </div>
             </div>

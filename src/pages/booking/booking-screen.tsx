@@ -21,14 +21,31 @@ import {
 } from '../../store/detailed-process/selectors';
 import MapScreen from '../../components/map/map';
 import BookingFormDate from '../../components/booking-form-date/booking-form-date';
+import { Helmet } from 'react-helmet-async';
+import { DatesForBooking } from '../../const';
+export { DatesForBooking } from '../../const';
+import { useState } from 'react';
+import {
+  setPlaceId,
+  clearDataToSend,
+} from '../../store/booking-process/booking-process';
+import { postBookingAction } from '../../store/api-actions';
+import { getDataToSend } from '../../store/booking-process/selectors';
+
+import { redirectToRoute } from '../../store/action';
+import { AppRoute } from '../../const';
 
 export default function BookingScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const { id } = useParams();
 
   useEffect(() => {
-    dispatch(fetchBookingDataAction(id));
-    dispatch(fetchDetailedQuestDataAction(id));
+    if (id) {
+      dispatch(fetchBookingDataAction(id));
+      dispatch(fetchDetailedQuestDataAction(id));
+      dispatch(setPlaceId(id));
+      dispatch(clearDataToSend());
+    }
   }, [dispatch, id]);
 
   const bookingQuestData = useAppSelector(getBookingQuestData);
@@ -38,7 +55,54 @@ export default function BookingScreen(): JSX.Element {
   const detailedQuestDataHasError = useAppSelector(getDetailedQuestHasError);
   const isDetailedQuestLoading = useAppSelector(getDetailedQuestIsLoading);
   const activeBookingData = useAppSelector(getActiveBookingData);
-  console.log(activeBookingData);
+  const dataToSend = useAppSelector(getDataToSend);
+
+  const [contactPerson, setContactPerson] = useState('');
+  const [phone, setPhone] = useState('');
+  const [peopleCount, setPeopleCount] = useState(0);
+  const [withChildren, setWithChildren] = useState(false);
+  const [politicsAgreed, setPoliticsAgreed] = useState(false);
+
+  const isFormValid = () => {
+    if (!detailedQuestData) {
+      return false;
+    }
+
+    return (
+      contactPerson.length >= 1 &&
+      contactPerson.length <= 15 &&
+      phone.length === 11 &&
+      peopleCount >= detailedQuestData.peopleMinMax[0] &&
+      peopleCount <= detailedQuestData.peopleMinMax[1] &&
+      politicsAgreed &&
+      !!dataToSend.time &&
+      !!dataToSend.date &&
+      !isBookingDataLoading
+    );
+  };
+
+  const handleSubmit = (evt: React.FormEvent) => {
+    evt.preventDefault();
+    if (!detailedQuestData || !isFormValid()) {
+      return;
+    }
+
+    dispatch(
+      postBookingAction({
+        data: {
+          ...dataToSend,
+          contactPerson,
+          phone,
+          peopleCount,
+          withChildren,
+        },
+        id: detailedQuestData.id,
+      })
+    );
+    dispatch(clearDataToSend());
+    dispatch(redirectToRoute(AppRoute.MY_QUESTS));
+  };
+
   if (
     isBookingDataLoading ||
     isDetailedQuestLoading ||
@@ -58,7 +122,9 @@ export default function BookingScreen(): JSX.Element {
 
   return (
     <>
-      <title>Бронирование квеста - Escape Room</title>
+      <Helmet>
+        <title>Бронирование квеста - Escape Room</title>
+      </Helmet>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
@@ -448,8 +514,8 @@ export default function BookingScreen(): JSX.Element {
             </div>
             <form
               className="booking-form"
-              action="https://echo.htmlacademy.ru/"
               method="post"
+              onSubmit={handleSubmit}
             >
               <fieldset className="booking-form__section">
                 <legend className="visually-hidden">
@@ -459,7 +525,11 @@ export default function BookingScreen(): JSX.Element {
                   <legend className="booking-form__date-title">Сегодня</legend>
                   <div className="booking-form__date-inner-wrapper">
                     {activeBookingData.slots.today.map((slot) => (
-                      <BookingFormDate key={slot.time} {...slot} />
+                      <BookingFormDate
+                        key={slot.time}
+                        {...slot}
+                        day={DatesForBooking.TODAY}
+                      />
                     ))}
                   </div>
                 </fieldset>
@@ -467,7 +537,11 @@ export default function BookingScreen(): JSX.Element {
                   <legend className="booking-form__date-title">Завтра</legend>
                   <div className="booking-form__date-inner-wrapper">
                     {activeBookingData.slots.tomorrow.map((slot) => (
-                      <BookingFormDate key={slot.time} {...slot} />
+                      <BookingFormDate
+                        key={slot.time}
+                        {...slot}
+                        day={DatesForBooking.TOMORROW}
+                      />
                     ))}
                   </div>
                 </fieldset>
@@ -486,7 +560,11 @@ export default function BookingScreen(): JSX.Element {
                     name="name"
                     placeholder="Имя"
                     required
-                    pattern="[А-Яа-яЁёA-Za-z'- ]{1,}"
+                    pattern="^[А-Яа-яЁёA-Za-z '-]+$"
+                    minLength={1}
+                    maxLength={15}
+                    value={contactPerson}
+                    onChange={(e) => setContactPerson(e.target.value)}
                   />
                 </div>
                 <div className="custom-input booking-form__input">
@@ -500,6 +578,8 @@ export default function BookingScreen(): JSX.Element {
                     placeholder="Телефон"
                     required
                     pattern="[0-9]{10,}"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
                 <div className="custom-input booking-form__input">
@@ -511,11 +591,21 @@ export default function BookingScreen(): JSX.Element {
                     id="person"
                     name="person"
                     placeholder="Количество участников"
+                    min={detailedQuestData.peopleMinMax[0]}
+                    max={detailedQuestData.peopleMinMax[1]}
                     required
+                    value={peopleCount || ''}
+                    onChange={(e) => setPeopleCount(Number(e.target.value))}
                   />
                 </div>
                 <label className="custom-checkbox booking-form__checkbox booking-form__checkbox--children">
-                  <input type="checkbox" id="children" name="children" />
+                  <input
+                    type="checkbox"
+                    id="children"
+                    name="children"
+                    checked={withChildren}
+                    onChange={(e) => setWithChildren(e.target.checked)}
+                  />
                   <span className="custom-checkbox__icon">
                     <svg width={20} height={17} aria-hidden="true">
                       <use xlinkHref="#icon-tick" />
@@ -529,15 +619,19 @@ export default function BookingScreen(): JSX.Element {
               <button
                 className="btn btn--accent btn--cta booking-form__submit"
                 type="submit"
+                disabled={!isFormValid()}
               >
                 Забронировать
               </button>
+
               <label className="custom-checkbox booking-form__checkbox booking-form__checkbox--agreement">
                 <input
                   type="checkbox"
                   id="id-order-agreement"
                   name="user-agreement"
                   required
+                  checked={politicsAgreed}
+                  onChange={(e) => setPoliticsAgreed(e.target.checked)}
                 />
                 <span className="custom-checkbox__icon">
                   <svg width={20} height={17} aria-hidden="true">

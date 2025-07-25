@@ -61,9 +61,15 @@ export enum NameSpace {
   SortingProcess = 'SORTING_PROCESS',
   DetailedProcess = 'DETAILED_PROCESS',
   BookingProcess = 'BOOKING_PROCESS',
+  User = 'USER_PROCESS',
 }
 
 export const URL_MARKER_DEFAULT = '../markup/img/svg/pin-default.svg';
 export const URL_MARKER_CURRENT = '../markup/img/svg/pin-active.svg';
 
 export const SPB_COORDS = [59.938886, 30.713838];
+export const CONTACTS_COORDS = [59.968322, 30.317359];
+export enum DatesForBooking {
+  TODAY = 'today',
+  TOMORROW = 'tomorrow',
+}

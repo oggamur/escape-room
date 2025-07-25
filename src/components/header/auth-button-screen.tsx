@@ -1,5 +1,7 @@
-import { AuthorizationStatus } from '../../const';
-
+import { Link } from 'react-router-dom';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { useAppDispatch } from '../../hooks';
+import { logoutAction } from '../../store/api-actions';
 type AuthButtonScreenType = {
   isAuthStatus: AuthorizationStatus;
 };
@@ -7,16 +9,30 @@ type AuthButtonScreenType = {
 export default function AuthButtonScreen({
   isAuthStatus,
 }: AuthButtonScreenType): JSX.Element {
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    dispatch(logoutAction());
+  };
+
   if (isAuthStatus === AuthorizationStatus.AUTH) {
     return (
-      <a className="btn btn--accent header__side-item" href="#">
+      <Link
+        className="btn btn--accent header__side-item"
+        to={AppRoute.MAIN}
+        onClick={() => {
+          handleLogout();
+        }}
+      >
         Выйти
-      </a>
+      </Link>
     );
   }
   return (
-    <a className="btn header__side-item header__login-btn" href="login.html">
+    <Link
+      className="btn header__side-item header__login-btn"
+      to={AppRoute.LOGIN}
+    >
       Вход
-    </a>
+    </Link>
   );
 }

@@ -11,6 +11,10 @@ import {
 import WrongScreen from '../wrong/wrong-screen';
 import { filterGenreButtonsData, filterLevelButtonsData } from '../../const';
 import LoadingScreen from '../loading/loading-screen';
+import { Helmet } from 'react-helmet-async';
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
+import { AuthorizationStatus } from '../../const';
+import { AppRoute } from '../../const';
 
 export default function DetailedQuestScreen(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -18,6 +22,8 @@ export default function DetailedQuestScreen(): JSX.Element {
   const { id } = useParams();
   const hasError = useAppSelector(getDetailedQuestHasError);
   const isLoading = useAppSelector(getDetailedQuestIsLoading);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+
   useEffect(() => {
     dispatch(fetchDetailedQuestDataAction(id));
   }, [dispatch, id]);
@@ -32,7 +38,9 @@ export default function DetailedQuestScreen(): JSX.Element {
 
   return (
     <>
-      <title>Квест - Escape Room</title>
+      <Helmet>
+        <title>Квест - Escape Room</title>
+      </Helmet>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
@@ -423,12 +431,22 @@ export default function DetailedQuestScreen(): JSX.Element {
               <p className="quest-page__description">
                 {detailedQuestData.description}
               </p>
-              <Link
-                className="btn btn--accent btn--cta quest-page__btn"
-                to={`/booking/${detailedQuestData.id}`}
-              >
-                Забронировать
-              </Link>
+              {authorizationStatus === AuthorizationStatus.AUTH && (
+                <Link
+                  className="btn btn--accent btn--cta quest-page__btn"
+                  to={`/booking/${detailedQuestData.id}`}
+                >
+                  Забронировать
+                </Link>
+              )}
+              {authorizationStatus === AuthorizationStatus.NO_AUTH && (
+                <Link
+                  className="btn btn--accent btn--cta quest-page__btn"
+                  to={AppRoute.LOGIN}
+                >
+                  Забронировать
+                </Link>
+              )}
             </div>
           </div>
         </main>
