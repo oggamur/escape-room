@@ -1,6 +1,6 @@
 import { store } from '../store/store.js';
 import { AppRoute } from '../const';
-import { QuestCardType } from '../types/types';
+import { QuestCardType, MyQuestType } from '../types/types';
 import { DetailedQuestCardType, UserData } from '../types/types';
 import { AuthorizationStatus } from '../const';
 
@@ -66,4 +66,12 @@ export type BookingProcessState = {
 export type UserProcess = {
   authorizationStatus: AuthorizationStatus;
   userData: UserData;
+  isLoading: boolean;
+  hasError: boolean;
+};
+
+export type MyQuestsData = {
+  bookedQuestsData: MyQuestType[] | [];
+  isLoading: boolean;
+  hasError: boolean;
 };

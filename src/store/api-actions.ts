@@ -3,7 +3,7 @@ import { DataToSendType, State } from '../types/state.ts';
 import { AxiosInstance } from 'axios';
 import { APIRoute } from '../const';
 import { QuestCardType, UserData, AuthData } from '../types/types.ts';
-import { DetailedQuestCardType } from '../types/types.ts';
+import { DetailedQuestCardType, MyQuestType } from '../types/types.ts';
 import { BookedQuest } from '../types/state.ts';
 import { getToken, saveToken, dropToken } from '../services/token.ts';
 import { AppDispatch } from '../types/state.ts';
@@ -40,6 +40,21 @@ export const fetchDetailedQuestDataAction = createAsyncThunk<
   return { detailedOffer };
 });
 
+export const fetchBookedQuestsDataAction = createAsyncThunk<
+  MyQuestType[] | [],
+  undefined,
+  {
+    state: State;
+    extra: AxiosInstance;
+  }
+>('fetchBookingData', async (_arg, { extra: api }) => {
+  const { data: bookedQuestsData } = await api.get<MyQuestType[]>(
+    `${APIRoute.Reservations}`
+  );
+
+  return bookedQuestsData;
+});
+
 export const fetchBookingDataAction = createAsyncThunk<
   {
     bookedQuestData: BookedQuest[] | null;
@@ -62,6 +77,7 @@ export const fetchBookingDataAction = createAsyncThunk<
   if (bookedQuestData) {
     activeBookingData = bookedQuestData[0];
   }
+
   return { bookedQuestData, activeBookingData, id };
 });
 
@@ -149,3 +165,16 @@ export const postBookingAction = createAsyncThunk<
     });
   }
 );
+
+export const deleteBookingAction = createAsyncThunk<
+  { id: string },
+  { id: string },
+  {
+    state: State;
+    extra: AxiosInstance;
+  }
+>('comments/delete', async ({ id }, { extra: api }) => {
+  await api.delete(`${APIRoute.Reservations}/${id}`);
+
+  return { id };
+});

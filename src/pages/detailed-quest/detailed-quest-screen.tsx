@@ -30,7 +30,7 @@ export default function DetailedQuestScreen(): JSX.Element {
   const detailedQuestData = useAppSelector(getDetailedQuestData);
 
   if (isLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen size={60} color="#c75d29" />;
   }
   if (!detailedQuestData || hasError) {
     return <WrongScreen />;

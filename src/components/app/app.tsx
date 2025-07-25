@@ -11,7 +11,8 @@ import browserHistory from '../../browser-history';
 import HistoryRouter from '../../history-router';
 import WrongScreen from '../../pages/wrong/wrong-screen';
 import NotFoundScreen from '../../pages/not-found/not-found-screen';
-
+import PrivateRoute from '../private-route/private-route';
+import { AuthorizationStatus } from '../../const';
 function App(): JSX.Element {
   return (
     <HelmetProvider>
@@ -21,8 +22,22 @@ function App(): JSX.Element {
           <Route path={AppRoute.ERROR} element={<WrongScreen />} />
           <Route path="*" element={<NotFoundScreen />} />
           <Route path={AppRoute.LOGIN} element={<LoginScreen />} />
-          <Route path={AppRoute.MY_QUESTS} element={<MyQuestsScreen />} />
-          <Route path={AppRoute.BOOKING} element={<BookingScreen />} />
+          <Route
+            path={AppRoute.MY_QUESTS}
+            element={
+              <PrivateRoute authorizationStatus={AuthorizationStatus.AUTH}>
+                <MyQuestsScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={AppRoute.BOOKING}
+            element={
+              <PrivateRoute authorizationStatus={AuthorizationStatus.AUTH}>
+                <BookingScreen />
+              </PrivateRoute>
+            }
+          />
           <Route path={AppRoute.QUEST} element={<DetailedQuestScreen />} />
           <Route path={AppRoute.CONTACTS} element={<ContactsScreen />} />
         </Routes>

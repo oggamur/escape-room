@@ -1,14 +1,21 @@
 import HeaderScreen from '../../components/header/header-screen';
 import { useRef } from 'react';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { loginAction } from '../../store/api-actions';
 import { FormEvent } from 'react';
 import { Helmet } from 'react-helmet-async';
+import {
+  getUserHasError,
+  getUserIsLoading,
+} from '../../store/user-process/selectors';
+import WrongScreen from '../wrong/wrong-screen';
 
 export default function LoginScreen(): JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const dispatch = useAppDispatch();
+  const isLoading = useAppSelector(getUserIsLoading);
+  const hasError = useAppSelector(getUserHasError);
 
   const handleLogin = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -22,6 +29,10 @@ export default function LoginScreen(): JSX.Element {
       );
     }
   };
+
+  if (hasError) {
+    return <WrongScreen />;
+  }
 
   return (
     <>
@@ -435,6 +446,7 @@ export default function LoginScreen(): JSX.Element {
                   <button
                     className="btn btn--accent btn--general login-form__submit"
                     type="submit"
+                    disabled={isLoading}
                   >
                     Войти
                   </button>

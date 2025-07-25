@@ -560,7 +560,6 @@ export default function BookingScreen(): JSX.Element {
                     name="name"
                     placeholder="Имя"
                     required
-                    pattern="^[А-Яа-яЁёA-Za-z '-]+$"
                     minLength={1}
                     maxLength={15}
                     value={contactPerson}
@@ -577,7 +576,6 @@ export default function BookingScreen(): JSX.Element {
                     name="tel"
                     placeholder="Телефон"
                     required
-                    pattern="[0-9]{10,}"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />

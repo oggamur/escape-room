@@ -62,6 +62,7 @@ export enum NameSpace {
   DetailedProcess = 'DETAILED_PROCESS',
   BookingProcess = 'BOOKING_PROCESS',
   User = 'USER_PROCESS',
+  MyQuestsData = 'MY_QUESTS_DATA',
 }
 
 export const URL_MARKER_DEFAULT = '../markup/img/svg/pin-default.svg';

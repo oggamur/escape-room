@@ -13,7 +13,10 @@ const initialState: UserProcess = {
     name: '',
     token: '',
   },
+  isLoading: false,
+  hasError: false,
 };
+
 export const userProcess = createSlice({
   name: NameSpace.User,
   initialState,
@@ -37,12 +40,26 @@ export const userProcess = createSlice({
       .addCase(loginAction.fulfilled, (state, action) => {
         state.authorizationStatus = AuthorizationStatus.AUTH;
         state.userData = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(loginAction.pending, (state) => {
+        state.isLoading = true;
       })
       .addCase(loginAction.rejected, (state) => {
         state.authorizationStatus = AuthorizationStatus.NO_AUTH;
+        state.isLoading = false;
+        state.hasError = true;
       })
       .addCase(logoutAction.fulfilled, (state) => {
         state.authorizationStatus = AuthorizationStatus.NO_AUTH;
+        state.isLoading = false;
+      })
+      .addCase(logoutAction.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(logoutAction.rejected, (state) => {
+        state.isLoading = false;
+        state.hasError = true;
       });
   },
 });

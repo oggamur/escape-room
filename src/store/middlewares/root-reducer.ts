@@ -5,6 +5,7 @@ import { NameSpace } from '../../const';
 import { detailedProcess } from '../detailed-process/detailed-process';
 import { bookingProcess } from '../booking-process/booking-process';
 import { userProcess } from '../user-process/user-process';
+import { myQuestsData } from '../my-quests-data/my-quests-data';
 
 export const rootReducer = combineReducers({
   [NameSpace.QuestsData]: questsData.reducer,
@@ -12,4 +13,5 @@ export const rootReducer = combineReducers({
   [NameSpace.DetailedProcess]: detailedProcess.reducer,
   [NameSpace.BookingProcess]: bookingProcess.reducer,
   [NameSpace.User]: userProcess.reducer,
+  [NameSpace.MyQuestsData]: myQuestsData.reducer,
 });

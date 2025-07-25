@@ -39,3 +39,18 @@ export type AuthData = {
   login: string;
   password: string;
 };
+
+export type MyQuestType = {
+  date: string;
+  time: string;
+  contactPerson: string;
+  phone: string;
+  withChildren: boolean;
+  peopleCount: number;
+  id: string;
+  location: {
+    address: string;
+    coords: number[];
+  };
+  quest: QuestCardType;
+};
