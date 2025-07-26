@@ -1,4 +1,4 @@
-import { SortLevelType, SortGenreType } from '../const';
+import { SortLevelType, SortGenreType, DatesForBooking } from '../const';
 
 export type QuestCardType = {
   id: string;
@@ -41,7 +41,7 @@ export type AuthData = {
 };
 
 export type MyQuestType = {
-  date: string;
+  date: DatesForBooking;
   time: string;
   contactPerson: string;
   phone: string;

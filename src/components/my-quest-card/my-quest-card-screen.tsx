@@ -1,5 +1,5 @@
 import { MyQuestType } from '../../types/types';
-import { filterLevelButtonsData } from '../../const';
+import { filterLevelButtonsData, datesForBookingData } from '../../const';
 import { deleteBookingAction } from '../../store/api-actions';
 import { useAppDispatch } from '../../hooks';
 import { deleteBooking } from '../../store/my-quests-data/my-quests-data';
@@ -11,6 +11,7 @@ export default function MyQuestCardScreen({
 }: MyQuestCardType): JSX.Element {
   const dispatch = useAppDispatch();
   const level = filterLevelButtonsData[myQuest.quest.level];
+  const date = datesForBookingData[myQuest.date];
 
   return (
     <div className="quest-card">
@@ -35,7 +36,7 @@ export default function MyQuestCardScreen({
             {myQuest.quest.title}
           </a>
           <span className="quest-card__info">
-            {myQuest.date} &nbsp;{myQuest.time}&nbsp;{myQuest.location.address}
+            {date} &nbsp;{myQuest.time}&nbsp;{myQuest.location.address}
           </span>
         </div>
         <ul className="tags quest-card__tags">

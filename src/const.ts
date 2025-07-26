@@ -74,3 +74,8 @@ export enum DatesForBooking {
   TODAY = 'today',
   TOMORROW = 'tomorrow',
 }
+
+export const datesForBookingData = {
+  [DatesForBooking.TODAY]: 'Сегодня',
+  [DatesForBooking.TOMORROW]: 'Завтра',
+};
