@@ -26,6 +26,7 @@ import { getDataToSend } from '../../store/booking-process/selectors';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { useForm, Controller } from 'react-hook-form';
+import FooterScreen from '../../components/footer/footer-tsx';
 
 type FormData = {
   contactPerson: string;
@@ -635,66 +636,7 @@ export default function BookingScreen(): JSX.Element {
             </form>
           </div>
         </main>
-        <footer className="footer">
-          <div className="container container--size-l">
-            <div className="socials">
-              <ul className="socials__list">
-                <li className="socials__item">
-                  <a
-                    className="socials__link"
-                    href="#"
-                    aria-label="Skype"
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                  >
-                    <svg
-                      className="socials__icon socials__icon--default"
-                      width={28}
-                      height={28}
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-skype-default" />
-                    </svg>
-                    <svg
-                      className="socials__icon socials__icon--interactive"
-                      width={28}
-                      height={28}
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-skype-interactive" />
-                    </svg>
-                  </a>
-                </li>
-                <li className="socials__item">
-                  <a
-                    className="socials__link"
-                    href="#"
-                    aria-label="ВКонтакте"
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                  >
-                    <svg
-                      className="socials__icon socials__icon--default"
-                      width={28}
-                      height={28}
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-vk-default" />
-                    </svg>
-                    <svg
-                      className="socials__icon socials__icon--interactive"
-                      width={28}
-                      height={28}
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-vk-interactive" />
-                    </svg>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </footer>
+        <FooterScreen />
       </div>
     </>
   );
