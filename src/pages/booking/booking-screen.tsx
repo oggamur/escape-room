@@ -31,13 +31,13 @@ import {
 } from '../../store/booking-process/booking-process';
 import { postBookingAction } from '../../store/api-actions';
 import { getDataToSend } from '../../store/booking-process/selectors';
-
-import { redirectToRoute } from '../../store/action';
+import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '../../const';
 
 export default function BookingScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -100,7 +100,7 @@ export default function BookingScreen(): JSX.Element {
       })
     );
     dispatch(clearDataToSend());
-    dispatch(redirectToRoute(AppRoute.MY_QUESTS));
+    navigate(AppRoute.MY_QUESTS);
   };
 
   if (
