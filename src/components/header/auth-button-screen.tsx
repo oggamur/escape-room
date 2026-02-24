@@ -6,9 +6,7 @@ type AuthButtonScreenType = {
   isAuthStatus: AuthorizationStatus;
 };
 
-export default function AuthButtonScreen({
-  isAuthStatus,
-}: AuthButtonScreenType): JSX.Element {
+export default function AuthButtonScreen({ isAuthStatus }: AuthButtonScreenType): JSX.Element {
   const dispatch = useAppDispatch();
   const handleLogout = () => {
     dispatch(logoutAction());
@@ -28,10 +26,7 @@ export default function AuthButtonScreen({
     );
   }
   return (
-    <Link
-      className="btn header__side-item header__login-btn"
-      to={AppRoute.LOGIN}
-    >
+    <Link className="btn header__side-item header__login-btn" to={AppRoute.LOGIN}>
       Вход
     </Link>
   );

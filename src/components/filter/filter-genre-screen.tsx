@@ -18,12 +18,7 @@ export default function FilterGenreScreen(): JSX.Element {
             onChange={() => dispatch(setSortGenreType(key))}
           />
           <label className="filter__label" htmlFor={key}>
-            <svg
-              className="filter__icon"
-              width={26}
-              height={30}
-              aria-hidden="true"
-            >
+            <svg className="filter__icon" width={26} height={30} aria-hidden="true">
               <use
                 xlinkHref={
                   key === Object.keys(filterGenreButtonsData)[0]

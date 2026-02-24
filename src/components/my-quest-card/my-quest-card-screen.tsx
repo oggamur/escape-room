@@ -3,12 +3,11 @@ import { filterLevelButtonsData, datesForBookingData } from '../../const';
 import { deleteBookingAction } from '../../store/api-actions';
 import { useAppDispatch } from '../../hooks';
 import { deleteBooking } from '../../store/my-quests-data/my-quests-data';
+import { Link } from 'react-router-dom';
 type MyQuestCardType = {
   myQuest: MyQuestType;
 };
-export default function MyQuestCardScreen({
-  myQuest,
-}: MyQuestCardType): JSX.Element {
+export default function MyQuestCardScreen({ myQuest }: MyQuestCardType): JSX.Element {
   const dispatch = useAppDispatch();
   const level = filterLevelButtonsData[myQuest.quest.level];
   const date = datesForBookingData[myQuest.date];
@@ -32,9 +31,9 @@ export default function MyQuestCardScreen({
       </div>
       <div className="quest-card__content">
         <div className="quest-card__info-wrapper">
-          <a className="quest-card__link" href="quest.html">
+          <Link to={`/quest/${myQuest.quest.id}`} className="quest-card__link">
             {myQuest.quest.title}
-          </a>
+          </Link>
           <span className="quest-card__info">
             {date} &nbsp;{myQuest.time}&nbsp;{myQuest.location.address}
           </span>
